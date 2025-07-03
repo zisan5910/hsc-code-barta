@@ -100,13 +100,24 @@ const Preview = ({ language, code, algorithm, flowchart }: PreviewProps) => {
           <h3 className="font-medium">অ্যালগরিদম (Algorithm)</h3>
         </div>
         <div className="bg-purple-50 p-4 rounded-b-lg border-2 border-purple-200 max-h-96 overflow-y-auto">
-          <ol className="list-decimal list-inside space-y-2 text-sm">
-            {displayAlgorithm.map((step, index) => (
-              <li key={index} className="text-gray-700 leading-relaxed break-words font-medium">
-                {step}
-              </li>
-            ))}
-          </ol>
+          {/* Algorithm table format like in the textbook */}
+          <div className="border-2 border-gray-400 bg-teal-100 rounded-lg overflow-hidden">
+            <div className="bg-teal-200 border-b-2 border-gray-400 px-4 py-2 text-center font-bold text-gray-800">
+              Algorithm
+            </div>
+            <div className="p-4">
+              {displayAlgorithm.map((step, index) => (
+                <div key={index} className="mb-2 flex">
+                  <div className="font-bold text-gray-700 mr-4 min-w-[60px]">
+                    Step-{index + 1}:
+                  </div>
+                  <div className="text-gray-700 font-medium flex-1">
+                    {step}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -116,33 +127,34 @@ const Preview = ({ language, code, algorithm, flowchart }: PreviewProps) => {
           <h3 className="font-medium">ফ্লোচার্ট (Flowchart)</h3>
         </div>
         <div className="bg-teal-50 p-6 rounded-b-lg border-2 border-teal-200 max-h-96 overflow-y-auto">
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center space-y-6">
             {displayFlowchart.map((step, index) => (
               <div key={index} className="flex flex-col items-center w-full max-w-xs">
+                {/* Flowchart box styled like textbook */}
                 <div className={`
-                  relative px-4 py-3 text-sm font-semibold text-center min-w-[140px] border-2 shadow-lg break-words transition-all duration-200 hover:shadow-xl
+                  relative px-6 py-4 text-sm font-bold text-center min-w-[160px] min-h-[60px] flex items-center justify-center border-2 border-black shadow-lg bg-orange-200 transition-all duration-200 hover:shadow-xl
                   ${step.type === 'start' || step.type === 'end' 
-                    ? 'bg-gradient-to-br from-red-100 to-red-200 border-red-400 rounded-full text-red-800' 
+                    ? 'rounded-full bg-orange-200' 
                     : step.type === 'decision'
-                    ? 'bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-400 text-yellow-800 diamond-shape'
-                    : step.type === 'input'
-                    ? 'bg-gradient-to-br from-blue-100 to-blue-200 border-blue-400 text-blue-800 parallelogram-shape'
-                    : step.type === 'output'
-                    ? 'bg-gradient-to-br from-green-100 to-green-200 border-green-400 text-green-800 parallelogram-shape'
-                    : 'bg-gradient-to-br from-gray-100 to-gray-200 border-gray-400 text-gray-800 rounded-lg'
+                    ? 'bg-orange-200 transform rotate-45'
+                    : step.type === 'input' || step.type === 'output'
+                    ? 'bg-orange-200 transform skew-x-12'
+                    : 'bg-orange-200 rounded-lg'
                   }
                 `}>
-                  <span className="relative z-10 text-xs leading-tight">
+                  <span className={`relative z-10 text-xs leading-tight text-black font-bold
+                    ${step.type === 'decision' ? 'transform -rotate-45' : ''}
+                    ${step.type === 'input' || step.type === 'output' ? 'transform -skew-x-12' : ''}
+                  `}>
                     {step.textBangla}
                   </span>
-                  {step.type === 'decision' && (
-                    <div className="absolute inset-0 bg-yellow-200 border-2 border-yellow-400 transform rotate-45 rounded-lg -z-10"></div>
-                  )}
                 </div>
+                
+                {/* Arrow between steps */}
                 {index < displayFlowchart.length - 1 && (
-                  <div className="flex flex-col items-center">
-                    <div className="w-0.5 h-8 bg-gray-400"></div>
-                    <div className="w-0 h-0 border-l-4 border-r-4 border-t-8 border-transparent border-l-transparent border-r-transparent border-t-gray-400"></div>
+                  <div className="flex flex-col items-center my-2">
+                    <div className="w-0.5 h-6 bg-black"></div>
+                    <div className="w-0 h-0 border-l-4 border-r-4 border-t-8 border-transparent border-l-transparent border-r-transparent border-t-black"></div>
                   </div>
                 )}
               </div>
