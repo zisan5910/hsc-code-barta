@@ -1,22 +1,62 @@
 
 {
-  "name": "Theta Code",
+  "name": "Theta Code - কোডিং ল্যাব",
   "short_name": "Theta Code",
-  "description": "Mobile-first coding lab for HSC students",
+  "description": "HSC শিক্ষার্থীদের জন্য HTML এবং C প্রোগ্রামিং শেখার অফলাইন প্ল্যাটফর্ম",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1a1a2e",
   "theme_color": "#7c3aed",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "scope": "/",
+  "prefer_related_applications": false,
   "icons": [
+    {
+      "src": "https://i.postimg.cc/NMq1Y6K6/Picsart-25-07-03-17-55-04-190.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "https://i.postimg.cc/NMq1Y6K6/Picsart-25-07-03-17-55-04-190.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/NMq1Y6K6/Picsart-25-07-03-17-55-04-190.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["education", "productivity"],
-  "lang": "en"
+  "categories": ["education", "productivity", "developer"],
+  "lang": "bn",
+  "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "HTML এডিটর",
+      "short_name": "HTML",
+      "description": "HTML কোড লিখুন এবং দেখুন",
+      "url": "/?lang=html",
+      "icons": [
+        {
+          "src": "https://i.postimg.cc/NMq1Y6K6/Picsart-25-07-03-17-55-04-190.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "C প্রোগ্রামিং",
+      "short_name": "C Code",
+      "description": "C প্রোগ্রাম লিখুন এবং শিখুন",
+      "url": "/?lang=c",
+      "icons": [
+        {
+          "src": "https://i.postimg.cc/NMq1Y6K6/Picsart-25-07-03-17-55-04-190.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
 }

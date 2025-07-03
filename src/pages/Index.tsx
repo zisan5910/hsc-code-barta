@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import LanguageToggle from '../components/LanguageToggle';
 import CheatCodeSelector from '../components/CheatCodeSelector';
 import CodeEditor from '../components/CodeEditor';
 import Preview from '../components/Preview';
+import PWAInstallPrompt from '../components/PWAInstallPrompt';
 import { Language, CheatCode } from '../types';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -33,13 +33,44 @@ int main() {
   const [code, setCode] = useLocalStorage('hsc-code-lab-code', defaultTemplates.html);
   const [currentCheatCode, setCurrentCheatCode] = useState<CheatCode | null>(null);
 
-  // Service Worker Registration for PWA
+  // Service Worker Registration for PWA with enhanced offline support
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('Service Worker registered'))
+        .then((registration) => {
+          console.log('Service Worker registered successfully:', registration);
+          
+          // Check for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('New content available, refresh to update');
+                }
+              });
+            }
+          });
+        })
         .catch((error) => console.error('Service Worker registration failed:', error));
     }
+
+    // Add offline/online event listeners
+    const handleOnline = () => {
+      console.log('অনলাইন - ইন্টারনেট সংযোগ পুনরুদ্ধার হয়েছে');
+    };
+
+    const handleOffline = () => {
+      console.log('অফলাইন - ইন্টারনেট সংযোগ নেই');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
 
   const handleLanguageChange = (newLanguage: Language) => {
@@ -95,6 +126,9 @@ int main() {
           />
         </div>
       </div>
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   );
 };
