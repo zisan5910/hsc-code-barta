@@ -1,0 +1,22 @@
+
+{
+  "name": "Theta Code",
+  "short_name": "Theta Code",
+  "description": "Mobile-first coding lab for HSC students",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/NMq1Y6K6/Picsart-25-07-03-17-55-04-190.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "en"
+}
