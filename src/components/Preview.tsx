@@ -1,5 +1,6 @@
 
 import { Language } from '../types';
+import { analyzeCCode } from '../utils/cCodeAnalyzer';
 
 interface PreviewProps {
   language: Language;
@@ -61,9 +62,15 @@ const Preview = ({ language, code, algorithm, flowchart }: PreviewProps) => {
     );
   }
 
+  // For C programs, analyze the code to generate proper output, algorithm, and flowchart
+  const analyzedCode = analyzeCCode(code);
+  const displayAlgorithm = algorithm || analyzedCode.algorithm;
+  const displayFlowchart = flowchart || analyzedCode.flowchart;
+  const displayOutput = analyzedCode.output;
+
   return (
     <div className="mx-4 mb-4 space-y-4">
-      {/* Mock Output */}
+      {/* Program Output */}
       <div>
         <div className="bg-green-600 text-white px-4 py-2 rounded-t-lg flex items-center">
           <div className="flex space-x-2 mr-3">
@@ -71,85 +78,78 @@ const Preview = ({ language, code, algorithm, flowchart }: PreviewProps) => {
             <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
           </div>
-          <h3 className="font-medium">Program Output</h3>
+          <h3 className="font-medium">প্রোগ্রাম আউটপুট</h3>
         </div>
         <div className="bg-black text-green-400 p-4 rounded-b-lg font-mono text-sm border-2 border-green-200 overflow-x-auto">
           <div className="text-gray-400 mb-2">$ ./program</div>
-          <div className="whitespace-pre-wrap break-words">
-            {code.includes('Hello') && <div>Hello, World!</div>}
-            {code.includes('printf') && code.includes('age') && <div>বয়স: 18</div>}
-            {code.includes('scanf') && code.includes('sum') && (
-              <div>
-                <div>প্রথম সংখ্যা লিখুন: 5</div>
-                <div>দ্বিতীয় সংখ্যা লিখুন: 3</div>
-                <div>যোগফল: 8</div>
-              </div>
-            )}
-            {code.includes('marks') && (
-              <div>
-                <div>নম্বর লিখুন: 85</div>
-                <div>গ্রেড: A+</div>
-              </div>
-            )}
-            {code.includes('for') && code.includes('printf') && (
-              <div>১ থেকে 10 পর্যন্ত সংখ্যাগুলো:<br />1 2 3 4 5 6 7 8 9 10</div>
+          <div className="whitespace-pre-wrap break-words space-y-1">
+            {displayOutput.length > 0 ? (
+              displayOutput.map((line, index) => (
+                <div key={index} className="text-green-300">{line}</div>
+              ))
+            ) : (
+              <div className="text-green-300">প্রোগ্রাম সফলভাবে রান হয়েছে</div>
             )}
           </div>
         </div>
       </div>
 
       {/* Algorithm */}
-      {algorithm && (
-        <div>
-          <div className="bg-purple-600 text-white px-4 py-2 rounded-t-lg">
-            <h3 className="font-medium">অ্যালগরিদম (Algorithm)</h3>
-          </div>
-          <div className="bg-purple-50 p-4 rounded-b-lg border-2 border-purple-200 max-h-96 overflow-y-auto">
-            <ol className="list-decimal list-inside space-y-2 text-sm">
-              {algorithm.map((step, index) => (
-                <li key={index} className="text-gray-700 leading-relaxed break-words">{step}</li>
-              ))}
-            </ol>
-          </div>
+      <div>
+        <div className="bg-purple-600 text-white px-4 py-2 rounded-t-lg">
+          <h3 className="font-medium">অ্যালগরিদম (Algorithm)</h3>
         </div>
-      )}
+        <div className="bg-purple-50 p-4 rounded-b-lg border-2 border-purple-200 max-h-96 overflow-y-auto">
+          <ol className="list-decimal list-inside space-y-2 text-sm">
+            {displayAlgorithm.map((step, index) => (
+              <li key={index} className="text-gray-700 leading-relaxed break-words font-medium">
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
 
       {/* Flowchart */}
-      {flowchart && (
-        <div>
-          <div className="bg-teal-600 text-white px-4 py-2 rounded-t-lg">
-            <h3 className="font-medium">ফ্লোচার্ট (Flowchart)</h3>
-          </div>
-          <div className="bg-teal-50 p-6 rounded-b-lg border-2 border-teal-200 max-h-96 overflow-y-auto">
-            <div className="flex flex-col items-center space-y-3">
-              {flowchart.map((step, index) => (
-                <div key={index} className="flex flex-col items-center w-full max-w-xs">
-                  <div className={`
-                    px-4 py-2 text-sm font-medium text-center min-w-[120px] border-2 shadow-sm break-words
-                    ${step.type === 'start' || step.type === 'end' 
-                      ? 'bg-red-100 border-red-300 rounded-full' 
-                      : step.type === 'decision'
-                      ? 'bg-yellow-100 border-yellow-300 transform rotate-45 w-20 h-20 flex items-center justify-center'
-                      : step.type === 'input'
-                      ? 'bg-blue-100 border-blue-300 rounded-lg transform skew-x-12'
-                      : step.type === 'output'
-                      ? 'bg-green-100 border-green-300 rounded-lg transform skew-x-12'
-                      : 'bg-gray-100 border-gray-300 rounded-lg'
-                    }
-                  `}>
-                    <span className={step.type === 'decision' ? 'transform -rotate-45 text-xs' : ''}>
-                      {step.textBangla}
-                    </span>
-                  </div>
-                  {index < flowchart.length - 1 && (
-                    <div className="w-0.5 h-6 bg-gray-400"></div>
+      <div>
+        <div className="bg-teal-600 text-white px-4 py-2 rounded-t-lg">
+          <h3 className="font-medium">ফ্লোচার্ট (Flowchart)</h3>
+        </div>
+        <div className="bg-teal-50 p-6 rounded-b-lg border-2 border-teal-200 max-h-96 overflow-y-auto">
+          <div className="flex flex-col items-center space-y-4">
+            {displayFlowchart.map((step, index) => (
+              <div key={index} className="flex flex-col items-center w-full max-w-xs">
+                <div className={`
+                  relative px-4 py-3 text-sm font-semibold text-center min-w-[140px] border-2 shadow-lg break-words transition-all duration-200 hover:shadow-xl
+                  ${step.type === 'start' || step.type === 'end' 
+                    ? 'bg-gradient-to-br from-red-100 to-red-200 border-red-400 rounded-full text-red-800' 
+                    : step.type === 'decision'
+                    ? 'bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-400 text-yellow-800 diamond-shape'
+                    : step.type === 'input'
+                    ? 'bg-gradient-to-br from-blue-100 to-blue-200 border-blue-400 text-blue-800 parallelogram-shape'
+                    : step.type === 'output'
+                    ? 'bg-gradient-to-br from-green-100 to-green-200 border-green-400 text-green-800 parallelogram-shape'
+                    : 'bg-gradient-to-br from-gray-100 to-gray-200 border-gray-400 text-gray-800 rounded-lg'
+                  }
+                `}>
+                  <span className="relative z-10 text-xs leading-tight">
+                    {step.textBangla}
+                  </span>
+                  {step.type === 'decision' && (
+                    <div className="absolute inset-0 bg-yellow-200 border-2 border-yellow-400 transform rotate-45 rounded-lg -z-10"></div>
                   )}
                 </div>
-              ))}
-            </div>
+                {index < displayFlowchart.length - 1 && (
+                  <div className="flex flex-col items-center">
+                    <div className="w-0.5 h-8 bg-gray-400"></div>
+                    <div className="w-0 h-0 border-l-4 border-r-4 border-t-8 border-transparent border-l-transparent border-r-transparent border-t-gray-400"></div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
